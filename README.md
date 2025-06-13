@@ -1,7 +1,8 @@
-# Todo App - Hari ke-16
+# Todo App - Hari ke-17
 
-- Menambahkan komponen Modal
-- Menambahkan fitur konfirmasi dengan Modal saat menghapus list
+- Menambahkan animasi pada profil
+- Menambahkan animasi saat menambahkan list dan menghapus list
+- Menghapus filter drag & drop
 
 ## Cara Menjalankan
 
