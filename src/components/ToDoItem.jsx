@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useTheme } from "./ThemeContext";
 import ModalKonfirmasi from "./ModalKonfirmasi";
+import { motion } from "framer-motion";
 
 function ToDoItem({ item, itemid, onStatus, onDelete, onEdit }) {
   const { isDarkMode, _ } = useTheme();
@@ -16,6 +17,15 @@ function ToDoItem({ item, itemid, onStatus, onDelete, onEdit }) {
   };
   return (
     <>
+    <motion.div
+      initial={{ opacity: 0, x: -30 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 30 }}
+      transition={{ duration: 0.3 }}
+      className={`${
+        isDarkMode ? "bg-gray-900 text-white" : "bg-white text-black"
+      } p-4 rounded-lg shadow-md mb-4 flex items-center justify-between`}
+    >
       <li
         key={itemid}
         style={{ textDecoration: item.completed ? "line-through" : "none" }}
@@ -35,8 +45,8 @@ function ToDoItem({ item, itemid, onStatus, onDelete, onEdit }) {
               : item.priority === "Medium"
               ? "bg-yellow-400 text-black"
               : "bg-green-400 text-black"
-          }`}
-        >
+            }`}
+            >
           {item.priority}
         </span>
         {isEditing ? (
@@ -45,38 +55,30 @@ function ToDoItem({ item, itemid, onStatus, onDelete, onEdit }) {
               value={newText}
               onChange={(e) => setNewText(e.target.value)}
               className="bg-white rounded-lg px-2 py-1 mr-2 border"
-            />
+              />
             <button
               onClick={saveHandler}
               className={`${isDarkMode ? "bg-white text-black" : "bg-black text-white"} rounded-lg border mr-2 px-2 py-1 transition duration-300 ease-in-out transform hover:scale-105 hover:bg-black hover:bg-opacity-80 hover:text-white`}
-            >
+              >
               Save
             </button>
           </>
         ) : (
           <button
-            onClick={() => setIsEditing(true)}
-            className={`${
-              isDarkMode ? "bg-white text-black" : "bg-black text-white"
-            } rounded-lg border mr-2 px-2 py-1 transition duration-300 ease-in-out transform hover:scale-105 hover:bg-black hover:bg-opacity-80 hover:text-white`}
+          onClick={() => setIsEditing(true)}
+          className={`${
+            isDarkMode ? "bg-white text-black" : "bg-black text-white"
+          } rounded-lg border mr-2 px-2 py-1 transition duration-300 ease-in-out transform hover:scale-105 hover:bg-black hover:bg-opacity-80 hover:text-white`}
           >
             Edit
           </button>
         )}
-        {/* <button
-          onClick={() => onDelete(item.id)}
-          className={`${
-            isDarkMode ? "bg-white text-black" : "bg-black text-white"
-          } rounded-lg border px-2 py-1 transition duration-300 ease-in-out transform hover:scale-105 hover:bg-black hover:bg-opacity-80 hover:text-white`}
-        >
-          Hapus
-        </button> */}
         <button
           onClick={() => setOpenModal(true)}
           className={`${
             isDarkMode ? "bg-white text-black" : "bg-black text-white"
           } rounded-lg border px-2 py-1 transition duration-300 ease-in-out transform hover:scale-105 hover:bg-black hover:bg-opacity-80 hover:text-white`}
-        >
+          >
           Hapus
         </button>
       </li>
@@ -88,6 +90,7 @@ function ToDoItem({ item, itemid, onStatus, onDelete, onEdit }) {
       ) : (
         ""
       )}
+      </motion.div>
       <ModalKonfirmasi 
           isOpen={openModal}
           onClose={() => setOpenModal(false)}

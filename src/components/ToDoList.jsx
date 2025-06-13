@@ -1,39 +1,14 @@
 import React from "react";
 import { useState } from "react";
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import ToDoItem from "./ToDoItem";
+import { AnimatePresence } from "framer-motion";
 
-function ToDoList({ list, setTodoList, onStatus, onDelete, onEdit }) {
-  const sensors = useSensors(useSensor(PointerSensor));
+function ToDoList({ list, onStatus, onDelete, onEdit }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const searchList = list.filter((item) =>
     item.item.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-
-    if (active.id !== over.id) {
-      const oldIndex = list.findIndex((item) => item.id === active.id);
-      const newIndex = list.findIndex((item) => item.id === over.id);
-
-      setTodoList((prev) => arrayMove(prev, oldIndex, newIndex));
-    }
-  };
 
   return (
     <>
@@ -46,58 +21,19 @@ function ToDoList({ list, setTodoList, onStatus, onDelete, onEdit }) {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="bg-white border rounded-lg pl-2 pr-2 w-full my-2 mb-4 text-black"
         />
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={searchList.map((item) => item.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            {searchList.map((item) => (
-              <SortableTodoItem
-                key={item.id}
+        <AnimatePresence>
+          {searchList.map((item) => (
+            <div className="">
+              <ToDoItem
                 item={item}
                 itemid={item.id}
                 onStatus={onStatus}
                 onDelete={onDelete}
                 onEdit={onEdit}
               />
-            ))}
-          </SortableContext>
-        </DndContext>
-      </div>
-    </>
-  );
-}
-
-function SortableTodoItem({ item, itemid, onStatus, onDelete, onEdit }) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: item.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
-  return (
-    <>
-      <div className="" ref={setNodeRef} style={style} {...attributes}>
-        <div
-          className=""
-          {...listeners}
-          style={{ cursor: "grab", paddingRight: "8px" }}
-        >
-          ☰
-        </div>
-        <ToDoItem
-          item={item}
-          itemid={itemid}
-          onStatus={onStatus}
-          onDelete={onDelete}
-          onEdit={onEdit}
-        />
+            </div>
+          ))}
+        </AnimatePresence>
       </div>
     </>
   );
